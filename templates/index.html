@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <title>{{ myX[0] }} or {{ myX[1] }} or {{ myX[2] }} or {{ myX[2] }} or {{ myX[4] }} or {{ myX[5] }} or {{ myX[6] }} or {{ myX[7] }} or {{ myX[8] }} or {{ myX[9] }}? </title>
+  </head>
+    <body>
+         <div class="container">
+             <div class="row">
+                <div class="col text-center">
+                    <h1>Welcome to the CIFAR-10 img calssifier</h1>
+                </div>
+            </div>
+            <div class="row align-items-end">
+                <div class="col text-center">
+                    <img height="150" width="150" src="/{{mySampleX[0]}}" class="img-thumbnail" />
+                    <h1>{{ myX[0] }}</h1>
+                </div>
+                <div class="col text-center">
+                    <h1>or</h1>
+                </div>
+                <div class="col text-center">
+                    <img height="150" width="150" src="/{{mySampleX[1]}}" class="img-thumbnail" />
+                    <h1>{{ myX[1] }}</h1>
+                </div>
+            <hr/>
+        </div>
+        <div class="container">
+            <div class="row">
+                <div class="col text-center">
+                    <h1>Welcome to</h1>
+                </div>
+            </div>
+             <div class="row align-items-end">
+                <div class="col text-center">
+                    <img height="150" width="150" src="/{{mySampleX[2]}}" class="img-thumbnail" />
+                    <h1>{{ myX[2] }}</h1>
+                </div>
+                <div class="col text-center">
+                    <h1>or</h1>
+                </div>
+                <div class="col text-center">
+                    <img height="150" width="150" src="/{{mySampleX[3]}}" class="img-thumbnail" />
+                    <h1>{{ myX[3] }}</h1>
+                </div>
+             <hr/>
+        </div>
+        <div class="container">
+             <div class="row">
+                <div class="col text-center">
+                    <h1>Welcome to</h1>
+                </div>
+            </div>
+                <div class="row align-items-end">
+                <div class="col text-center">
+                    <img height="150" width="150" src="/{{mySampleX[4]}}" class="img-thumbnail" />
+                    <h1>{{ myX[4] }}</h1>
+                </div>
+                <div class="col text-center">
+                    <h1>or</h1>
+                </div>
+                <div class="col text-center">
+                    <img height="150" width="150" src="/{{mySampleX[5]}}" class="img-thumbnail" />
+                    <h1>{{ myX[5] }}</h1>
+                </div>
+            <hr/>
+        </div>
+        <div class="container">
+             <div class="row">
+                <div class="col text-center">
+                    <h1>Welcome to</h1>
+                </div>
+            </div>
+                <div class="row align-items-end">
+                <div class="col text-center">
+                    <img height="150" width="150" src="/{{mySampleX[6]}}" class="img-thumbnail" />
+                    <h1>{{ myX[6] }}</h1>
+                </div>
+                <div class="col text-center">
+                    <h1>or</h1>
+                </div>
+                <div class="col text-center">
+                    <img height="150" width="150" src="/{{mySampleX[7]}}" class="img-thumbnail" />
+                    <h1>{{ myX[7] }}</h1>
+                </div>
+            <hr/>
+        </div>
+        <div class="container">
+             <div class="row">
+                <div class="col text-center">
+                    <h1>Welcome to</h1>
+                </div>
+            </div>
+                <div class="row align-items-end">
+                <div class="col text-center">
+                    <img height="150" width="150" src="/{{mySampleX[8]}}" class="img-thumbnail" />
+                    <h1>{{ myX[8] }}</h1>
+                </div>
+                <div class="col text-center">
+                    <h1>or</h1>
+                </div>
+                <div class="col text-center">
+                    <img height="150" width="150" src="/{{mySampleX[9]}}" class="img-thumbnail" />
+                    <h1>{{ myX[9] }}</h1>
+                </div>
+            <hr/>
+        </div>
+
+            <div class="row">
+                <div class="col">
+                    <h4>Upload new File</h4>
+                    <form action="/" method=post enctype="multipart/form-data">
+                        <input type="file" name="file" />
+                        <input type="submit" value="Upload" />
+                    </form>
+                </div>
+            </div>
+            {% for message in get_flashed_messages() %}
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            {% endfor %}
+            <hr/>
+            <div class="row">
+            {% if results is defined %}
+                {% for i in range(len-1,-1,-1) %}
+
+                    {{ results[i]|safe }}
+
+                {% endfor %}
+            {% endif %}
+            </div>
+        </div>
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+  </body>
+</html>
