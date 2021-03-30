@@ -5,8 +5,14 @@ The created model should be deployed in a container to allow other users to just
 # Install
 Install packages:   
 > pip install requirements.txt   
+> 
+
 Setup Flask:   
 > set FLASK_APP=app.py   
+> 
+
 Run the app   
 > flask run   
+> 
+
 
