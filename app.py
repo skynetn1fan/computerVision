@@ -1,16 +1,18 @@
-import numpy as np
 from flask import Flask, flash, jsonify, render_template, redirect, request, url_for, send_file
-from tensorflow.keras.preprocessing import image
+from tensorflow.keras.preprocessing.image import load_img
+from tensorflow.keras.preprocessing.image import img_to_array
+from tensorflow.keras.applications.vgg16 import preprocess_input
 from tensorflow.keras.models import load_model
-from tensorflow.python.keras import backend as K
+import numpy as np
+
 import tensorflow as tf
 import os
 from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
-model = load_model('.\\models\\custom_cifar10_cbs.h5')
+
 app.secret_key = 'super secret key'
-ML_MODEL_FILENAME = 'models/vgg16_cifar10_model_vgg16prepro.h5'
+ML_MODEL_FILENAME = 'models/custom_cifar10_model2.h5'
 
 # categories
 X = ['airplane', 'automobile', 'bird', 'cat', 'deer', 'dog', 'frog', 'horse', 'ship', 'truck']
@@ -18,28 +20,34 @@ X = ['airplane', 'automobile', 'bird', 'cat', 'deer', 'dog', 'frog', 'horse', 's
 # samples
 mySampleX = ['./static/class0.jpeg','./static/class1.jpeg','./static/class2.jpeg','./static/class3.jpeg','./static/class4.jpeg','./static/class5.jpeg','./static/class6.jpeg','./static/class7.jpeg','./static/class8.jpeg','./static/class9.jpeg']
 airplane = './static/class0.jpeg'
-automobile = './static/class0.jpeg'
-bird= './static/class0.jpeg'
-cat= './static/class0.jpeg'
-deer= './static/class0.jpeg'
-dog= './static/class0.jpeg'
-frog= './static/class0.jpeg'
-horse= './static/class0.jpeg'
-ship= './static/class0.jpeg'
-truck= './static/class0.jpeg'
+automobile = './static/class1.jpeg'
+bird= './static/class2.jpeg'
+cat= './static/class3.jpeg'
+deer= './static/class4.jpeg'
+dog= './static/class5.jpeg'
+frog= './static/class6.jpeg'
+horse= './static/class7.jpeg'
+ship= './static/class8.jpeg'
+truck= './static/class9.jpeg'
 
 UPLOAD_FOLDER = 'static/uploads'
 ALLOWED_EXT = {'png', 'jpg', 'jpeg', 'gif'}
 
 results = []
 
-def load_model_from_file():
 
-    mySession = tf.compat.v1.Session()
-    K.set_session(mySession)
+def getPrediction(filename):
     myModel = load_model(ML_MODEL_FILENAME)
-    myGraph = tf.compat.v1.get_default_graph()
-    return (mySession, myModel, myGraph)
+
+    image = load_img('static/uploads/'+filename, target_size=(32, 32))
+    image = img_to_array(image)
+    image = image.reshape((1, image.shape[0], image.shape[1], image.shape[2]))
+    image = preprocess_input(image)
+    yhat = myModel.predict(image)
+    label = X[np.argmax(yhat)]
+    acc = max(yhat.tolist()[0])*100
+
+    return label, acc
 
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXT
@@ -63,34 +71,19 @@ def upload_file():
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
             file.save(os.path.join(UPLOAD_FOLDER, filename))
-            return redirect(url_for('uploaded_file', filename=filename))
+            getPrediction(filename)
+            label, acc = getPrediction(filename)
+            flash(label)
+            flash(acc)
+            flash(filename)
+            # return redirect(url_for('upload_file', filename=filename))
+            return redirect('/')
 
-@app.route('/uploads/<filename>')
-def uploaded_file(filename):
-    test_image = image.load_img(os.path.join(UPLOAD_FOLDER, filename), target_size=(32, 32))
-    test_image = image.img_to_array(test_image)
-    test_image = np.expand_dims(test_image, axis=0)
-
-    mySession = app.config['SESSION']
-    myModel = app.config['MODEL']
-    myGRAPH = app.config['GRAPH']
-
-    # with myGRAPH.as_default():
-    K.set_session(mySession)
-    result = np.argmax(myModel.predict(test_image), axis=-1)
-    img_src = os.path.join(UPLOAD_FOLDER, filename)
-    answer = "<div class='col text-center'><img width='150' height='150' src='" + img_src + "' class='img-thumbnail' /><h4>guess:" + X + " " + str(
-        result) + "</h4></div><div class='col'></div><div class='w-100'></div>"
-    results.append(answer)
-    return render_template('index.html', myX=X, mySampleX=mySampleX, len=len(results), results=results)
 
 def main():
-    (mySession, myModel, myGraph) = load_model_from_file()
-
-    tf.compat.v1.enable_eager_execution()
-    app.config['SESSION'] = mySession
-    app.config['MODEL'] = myModel
-    app.config['GRAPH'] = myGraph
+    physical_devices = tf.config.experimental.list_physical_devices('GPU')
+    print('Num GPUs Availables: ', len(physical_devices))
+    tf.config.experimental.set_memory_growth(physical_devices[0], True)
     app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
     app.config['MAX_CONTENT_LENGTH'] = 16*1024*1024
     app.run()
