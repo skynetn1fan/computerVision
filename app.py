@@ -12,7 +12,7 @@ from werkzeug.utils import secure_filename
 app = Flask(__name__)
 
 app.secret_key = 'super secret key'
-ML_MODEL_FILENAME = 'models/custom_cifar10_model2.h5'
+ML_MODEL_FILENAME = 'models/vgg16_cifar10_model_vgg16prepro.h5'
 
 # categories
 X = ['airplane', 'automobile', 'bird', 'cat', 'deer', 'dog', 'frog', 'horse', 'ship', 'truck']
